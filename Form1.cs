@@ -91,7 +91,7 @@ namespace Wspr_Map
         {
             System.Version version = Assembly.GetExecutingAssembly().GetName().Version;
             string ver = "0.1.1";
-            string header = "WSPR Map                       V." + ver + "    GNU GPLv3 License";
+            string header = "WSPR Scheduler Map                       V." + ver + "    GNU GPLv3 License";
             passtextBox.Text = pass;
             radioButton1.Checked = true;
             bandlistBox.SelectedIndex = 0; //all bands
@@ -99,12 +99,13 @@ namespace Wspr_Map
             clutterlistBox.SelectedIndex = 0; //default to 0
 
             gmap.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
+            //gmap.MapProvider = GMap.NET.MapProviders.BingMapProvider.Instance;
             //GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerOnly;
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
 
-
             gmap.Position = new PointLatLng(30, 0); // equator at 0 degrees
 
+            //gmap.Anchor = AnchorStyles.Top;
 
             gmap.MinZoom = 2;
             gmap.MaxZoom = 16;
@@ -129,6 +130,8 @@ namespace Wspr_Map
             gmap.Overlays.Add(markers);
 
             gmap.Zoom = 2;
+            gmap.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
             Zoomlabel.Text = gmap.Zoom.ToString("F1");
             this.Text = "Reports for station: " + call;
             if (locator != "" || locator != null)
@@ -144,7 +147,7 @@ namespace Wspr_Map
 
             //GMaps.Instance.Mode = AccessMode.CacheOnly;
         }
-        private async void addMarker(double lat, double lon, GMarkerGoogleType pin, string tag)
+        private async Task addMarker(double lat, double lon, GMarkerGoogleType pin, string tag)
         {
 
             GMapMarker marker = new GMarkerGoogle(
@@ -165,6 +168,7 @@ namespace Wspr_Map
             mylon = latlong.Long;
 
             GMarkerGoogleType pin = GMarkerGoogleType.yellow_small;
+
             addMarker(mylat, mylon, pin, call);
 
 
@@ -185,6 +189,7 @@ namespace Wspr_Map
 
         private void gmap_OnMarkerClick(GMapMarker item, MouseEventArgs e)
         {
+            pinlabel.BringToFront();
             pinlabel.Location = e.Location;
             pinlabel.Text = (string)item.Tag;
 
@@ -380,6 +385,68 @@ namespace Wspr_Map
             }
             return b;
         }
+        private string get_reverse_band(int bandno)
+        {
+            string b = "all";
+            switch (bandno)
+            {             
+                case -1:
+                    b = "LF"; //lf
+                    break;
+                case 0:
+                    b = "MF";  //mf
+                    break;
+                case 1:
+                    b = "160";  //1.8
+                    break;
+                case 3:
+                    b = "80";
+                    break;
+                case 5:
+                    b = "60";
+                    break;
+                case 7:
+                    b = "40";
+                    break;
+                case 10:
+                    b = "30";
+                    break;
+                case 14:
+                    b = "20";
+                    break;
+                case 18:
+                    b = "17";
+                    break;
+                case 21:
+                    b = "15";
+                    break;
+                case 24:
+                    b = "12";
+                    break;
+                case 28:
+                    b = "10";
+                    break;
+                case 50:
+                    b = "6";
+                    break;
+                case 70:
+                    b = "4";
+                    break;
+                case 144:
+                    b = "2";
+                    break;
+                case 432:
+                    b = "70cm";
+                    break;
+                case 1296:
+                    b = "23cm";
+                    break;
+                default:
+                    b = "?";
+                    break;
+            }
+            return b;
+        }
 
         private double findPeriod()
         {
@@ -413,15 +480,24 @@ namespace Wspr_Map
                     return 0;
             }
         }
-        private void filter_results()
+
+
+        private void filterbutton_Click(object sender, EventArgs e)
+        {
+            filter_results();
+
+        }
+        private async void filter_results()
         {
             double zoom = gmap.Zoom;
-            markers.Markers.Clear();
-            gmap.Overlays.Add(markers);
+            gmap.Overlays.Clear();
             routes.Routes.Clear();
-            gmap.Overlays.Add(routes);
+            markers.Markers.Clear();
+          
+            
+           
             pinlabel.Text = "";
-            //dt = dt.AddHours(-2);
+         
             DateTime dtNow = DateTime.Now.ToUniversalTime();
             DateTime dtPrev = dtNow;
             double p = findPeriod();
@@ -457,9 +533,9 @@ namespace Wspr_Map
             {
                 if (radioButton1.Checked || radioButton3.Checked)
                 {
-                    find_selectedRX(prev, now, mhz, rows);
+                    await find_selectedRX(prev, now, mhz, rows);
                 }
-                zoom = 2;
+              
             }
             rows = table_countTX();
             if (rows > 0)
@@ -467,13 +543,15 @@ namespace Wspr_Map
 
                 if (radioButton1.Checked || radioButton2.Checked)
                 {
-                    find_selectedTX(prev, now, band, rows); //-2 means all bands
+                    await find_selectedTX(prev, now, band, rows); //-2 means all bands
                 }
-                zoom = 2;
+               
             }
 
-            gmap.Overlays.Add(routes);
+            gmap.Zoom = 3;
             gmap.Overlays.Add(markers);
+            gmap.Overlays.Add(routes);
+         
             gmap.Zoom = zoom;
 
 
@@ -640,7 +718,8 @@ namespace Wspr_Map
 
                 MySqlDataReader Reader;
                 Reader = command.ExecuteReader();
-
+                string bandS = "";
+                int index = bandlistBox.SelectedIndex;
                 while (Reader.Read())
                 {
                     found = true;
@@ -666,17 +745,27 @@ namespace Wspr_Map
 
 
                         GMarkerGoogleType pin = GMarkerGoogleType.blue_small;
-
-                        if (DX.tx_sign != "nil rcvd")
+                        bool special = false;
+                        if (QcheckBox.Checked && specialCall(DX.tx_sign))
+                        {                       
+                            special = true;
+                        }
+                        if (DX.tx_sign != "nil rcvd" && !special) 
                         {
                             LatLng latlong = MaidenheadLocator.LocatorToLatLng(DX.tx_loc);
 
                             txlat = latlong.Lat;
                             txlon = latlong.Long;
-                            addMarker(txlat, txlon, pin, DX.tx_sign);
+                            bandS = "";
+                            if (index == 0) //if all bands selected
+                            {                                
+                                bandS = get_reverse_band(DX.band);
+                                bandS = " (" + bandS + ")";
+                            }
+                            await addMarker(txlat, txlon, pin, DX.tx_sign+bandS);
                             if (pathcheckBox.Checked)
                             {
-                                addPath(mylat, mylon, txlat, txlon, Color.Green);
+                                await addPath(mylat, mylon, txlat, txlon, Color.Green);
                             }
                         }
                         i++;
@@ -698,6 +787,34 @@ namespace Wspr_Map
                 found = false;
 
             }
+
+        }
+
+        private bool specialCall(string call)
+        {
+            
+            if (call.StartsWith("0"))
+            {
+                return true;
+            }
+            if (call.StartsWith("Q"))
+            {
+                return true;
+            }
+          
+            if (call.StartsWith("1"))
+            {
+                return true;
+            }
+            if (call.Length >1)
+            {
+                if (char.IsDigit(call[0]) && char.IsDigit(call[1]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
 
         }
 
@@ -765,13 +882,8 @@ namespace Wspr_Map
             return found;
         }
 
-        private void filterbutton_Click(object sender, EventArgs e)
-        {
-            filter_results();
 
-        }
-
-        private void find_selectedTX(string time1, string time2, int band, int tablecount) //find a slot row for display in grid from the database corresponding to the date/time from the slot
+        private async Task find_selectedTX(string time1, string time2, int band, int tablecount) //find a slot row for display in grid from the database corresponding to the date/time from the slot
         {
             //gmap.Zoom = 3;
             double rxlat = 0;
@@ -823,7 +935,8 @@ namespace Wspr_Map
 
                 MySqlDataReader Reader;
                 Reader = command.ExecuteReader();
-
+                string bandS = "";
+                int index = bandlistBox.SelectedIndex;
                 while (Reader.Read())
                 {
                     found = true;
@@ -845,19 +958,23 @@ namespace Wspr_Map
                         RX.drift = (Int16)Reader["drift"];
                         RX.version = (string)Reader["version"];
 
-
-
+                       
                         LatLng latlong = MaidenheadLocator.LocatorToLatLng(RX.rx_loc);
 
                         rxlat = latlong.Lat;
                         rxlon = latlong.Long;
 
                         GMarkerGoogleType pin = GMarkerGoogleType.red_small;
-
-                        addMarker(rxlat, rxlon, pin, RX.rx_sign);
+                        bandS = "";
+                        if (index == 0) //all bands 
+                        {
+                            bandS = get_reverse_band(RX.band);
+                            bandS = " (" + bandS + ")";
+                        }
+                        await addMarker(rxlat, rxlon, pin, RX.rx_sign+bandS);
                         if (pathcheckBox.Checked)
                         {
-                            addPath(mylat, mylon, rxlat, rxlon, Color.Purple);
+                            await addPath(mylat, mylon, rxlat, rxlon, Color.Purple);
                         }
 
                         i++;
@@ -964,6 +1081,10 @@ namespace Wspr_Map
         }
 
         private void recentrebutton_Click(object sender, EventArgs e)
+        {
+            recentre();
+        }
+        private void recentre()
         {
             gmap.Position = new PointLatLng(30, 0); // equator at 0 degrees
             gmap.Zoom = 2;
@@ -1076,6 +1197,38 @@ namespace Wspr_Map
 
             return ok;
         }
+
+        private void autocheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (autocheckBox.Checked)
+            {
+                periodlistBox.SelectedIndex = 1;  //20 mins default
+                //bandlistBox.SelectedIndex = 0;
+                //clutterlistBox.SelectedIndex = 1;
+                pathcheckBox.Checked = true;
+                timer1.Enabled = true;
+                timer1.Start();
+            }
+            else
+            {
+                timer1.Enabled = false;
+                timer1.Stop();
+            }
+        }
+
+        private async void timer1_Tick(object sender, EventArgs e)
+        {
+           filter_results();
+            recentre();
+        }
+
+        private void gmap_Load(object sender, EventArgs e)
+        {
+        }
+
+       
+
+    
     }
 }
 
