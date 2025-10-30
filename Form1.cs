@@ -21,7 +21,6 @@ using static GMap.NET.Entity.OpenStreetMapRouteEntity;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 using WSPR_Map;
 
- 
 
 namespace Wspr_Map
 {
