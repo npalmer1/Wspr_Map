@@ -4,6 +4,7 @@ using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using Maidenhead;
+using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.VisualBasic.Logging;
 using MySql.Data.MySqlClient;
@@ -18,6 +19,7 @@ using System.Security.Cryptography;
 using System.Windows.Forms;
 using static GMap.NET.Entity.OpenStreetMapRouteEntity;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
+using WSPR_Map;
 
 
 
@@ -32,6 +34,8 @@ namespace Wspr_Map
 
         GMapOverlay markers = new GMapOverlay("markers");
         GMapOverlay routes = new GMapOverlay("routes");
+
+        MessageClass Msg = new MessageClass();
 
         public struct decoded_data
         {
@@ -119,7 +123,7 @@ namespace Wspr_Map
             int i = table_countRX();
             if (i > 0)
             {
-                find_reportedRX(i);
+                await find_reportedRX(i);
             }
             else
             {
@@ -484,17 +488,18 @@ namespace Wspr_Map
 
         private void filterbutton_Click(object sender, EventArgs e)
         {
+            MessageForm mForm = new MessageForm();
+            Msg.TCMessageBox("Please wait....", "", 20000, mForm);
             filter_results();
-
+            
+            mForm.Dispose();
         }
         private async void filter_results()
         {
             double zoom = gmap.Zoom;
             gmap.Overlays.Clear();
             routes.Routes.Clear();
-            markers.Markers.Clear();
-          
-            
+            markers.Markers.Clear();                      
            
             pinlabel.Text = "";
          
@@ -819,7 +824,7 @@ namespace Wspr_Map
         }
 
 
-        private bool find_reportedRX(int tablecount) //find a slot row for display in grid from the database corresponding to the date/time from the slot
+        private async Task<bool> find_reportedRX(int tablecount) //find a slot row for display in grid from the database corresponding to the date/time from the slot
         {
             DataTable Slots = new DataTable();
             //DateTime d = new DateTime();
