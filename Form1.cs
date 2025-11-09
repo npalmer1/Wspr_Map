@@ -203,7 +203,7 @@ namespace Wspr_Map
         private int table_countRX()
         {
             int count;
-            string connectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rpt";
+            string connectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rx";
 
             try
             {
@@ -212,7 +212,7 @@ namespace Wspr_Map
                 using (var connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
-                    using (var command = new MySqlCommand("SELECT COUNT(*) FROM received", connection))
+                    using (var command = new MySqlCommand("SELECT COUNT(*) FROM reported", connection))
                     {
                         count = Convert.ToInt32(command.ExecuteScalar());
                     }
@@ -488,7 +488,7 @@ namespace Wspr_Map
         private void filterbutton_Click(object sender, EventArgs e)
         {
             MessageForm mForm = new MessageForm();
-            Msg.TCMessageBox("Please wait....", "", 20000, mForm);
+            Msg.TCMessageBox("Please wait....", "", 30000, mForm);
             filter_results();
             
             mForm.Dispose();
@@ -562,116 +562,6 @@ namespace Wspr_Map
         }
 
 
-        /*private async Task find_selectedRX(string datetime1, string datetime2, string mhz, int tablecount) //find a slot row for display in grid from the database corresponding to the date/time from the slot
-        {
-            //gmap.Zoom = 3;
-            double txlat = 0;
-            double txlon = 0;
-
-            DataTable Slots = new DataTable();
-            //DateTime d = new DateTime();
-            int i = 0;
-            bool found = false;
-            string myConnectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rpt";
-
-            int maxrows = 1000; //max rows to return
-            string and = "";
-            string bandstr = "";
-            string q = "";
-            if (mhz != "")
-            {
-                bandstr = " AND frequency LIKE '" + mhz + "%' ";
-                and = "AND";
-            }
-
-            string fromstr = "";
-            if (clutterlistBox.SelectedIndex > 0)
-            {
-                fromstr = clutterlistBox.SelectedItem.ToString();
-                if (!kmcheckBox.Checked)    //miles
-                {
-                    double km = Convert.ToDouble(fromstr);
-                    km = km * 1.60934;
-                    fromstr = km.ToString("F1");
-                }
-            }
-
-
-            try
-            {
-                MySqlConnection connection = new MySqlConnection(myConnectionString);
-
-                connection.Open();
-
-                MySqlCommand command = connection.CreateCommand();
-
-
-
-                command.CommandText = "SELECT * FROM received WHERE datetime >= '" + datetime1 + "' AND datetime <= '" + datetime2 + "'" + bandstr + " AND distance >= '" + fromstr + "' ORDER BY datetime DESC";
-
-
-                MySqlDataReader Reader;
-                Reader = command.ExecuteReader();
-
-                while (Reader.Read())
-                {
-                    found = true;
-
-                    if (i < tablecount)   //only show first maxrows rows, or to length of reported table
-                    {
-
-                        DX.datetime = (DateTime)Reader["datetime"];
-                        DX.band = (Int16)Reader["band"];
-
-                        DX.tx_sign = (string)Reader["tx_sign"];
-                        DX.tx_loc = (string)Reader["tx_loc"];
-
-                        DX.frequency = (double)Reader["frequency"];
-                        DX.power = (Int16)Reader["power"];
-                        DX.snr = (int)Reader["snr"];
-                        DX.drift = (Int16)Reader["drift"];
-                        DX.distance = (int)Reader["distance"];
-                        DX.azimuth = (Int16)Reader["azimuth"];
-                        DX.reporter = (string)Reader["reporter"];
-                        DX.reporter_loc = (string)Reader["reporter_loc"];
-                        DX.dt = (float)Reader["dt"];
-
-
-                        LatLng latlong = MaidenheadLocator.LocatorToLatLng(DX.tx_loc);
-
-                        txlat = latlong.Lat;
-                        txlon = latlong.Long;
-                        GMarkerGoogleType pin = GMarkerGoogleType.blue_small;
-
-                        if (DX.tx_sign != "nil rcvd")
-                        {
-                            addMarker(txlat, txlon, pin, DX.tx_sign);
-                            if (pathcheckBox.Checked)
-                            {
-                                addPath(mylat, mylon, txlat, txlon, Color.Green);
-                            }
-                        }
-                        i++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-
-                }
-                Reader.Close();
-                connection.Close();
-                //gmap.Zoom = 2;
-
-            }
-            catch
-            {
-                found = false;
-
-            }
-
-        }*/
         private async Task find_selectedRX(string datetime1, string datetime2, string mhz, int tablecount) //find a slot row for display in grid from the database corresponding to the date/time from the slot
         {
             //gmap.Zoom = 3;
@@ -682,7 +572,7 @@ namespace Wspr_Map
             //DateTime d = new DateTime();
             int i = 0;
             bool found = false;
-            string myConnectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rpt";
+            string myConnectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rx";
 
             int maxrows = 1000; //max rows to return
             string and = "";
@@ -717,7 +607,7 @@ namespace Wspr_Map
 
 
 
-                command.CommandText = "SELECT * FROM received WHERE datetime >= '" + datetime1 + "' AND datetime <= '" + datetime2 + "'" + bandstr + " AND distance >= '" + fromstr + "' ORDER BY datetime DESC";
+                command.CommandText = "SELECT * FROM reported WHERE time >= '" + datetime1 + "' AND time <= '" + datetime2 + "'" + bandstr + " AND distance >= '" + fromstr + "' ORDER BY time DESC";
 
 
                 MySqlDataReader Reader;
@@ -731,7 +621,7 @@ namespace Wspr_Map
                     if (i < tablecount)   //only show first maxrows rows, or to length of reported table
                     {
 
-                        DX.datetime = (DateTime)Reader["datetime"];
+                        DX.datetime = (DateTime)Reader["time"];
                         DX.band = (Int16)Reader["band"];
 
                         DX.tx_sign = (string)Reader["tx_sign"];
@@ -829,7 +719,7 @@ namespace Wspr_Map
             //DateTime d = new DateTime();
             int i = 0;
             bool found = false;
-            string myConnectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rpt";
+            string myConnectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rx";
 
 
             try
@@ -841,7 +731,7 @@ namespace Wspr_Map
                 MySqlCommand command = connection.CreateCommand();
 
 
-                command.CommandText = "SELECT reporter, reporter_loc FROM received ORDER BY datetime DESC";
+                command.CommandText = "SELECT tx_sign, tx_loc FROM reported ORDER BY time DESC";
                 MySqlDataReader Reader;
                 Reader = command.ExecuteReader();
 
@@ -853,11 +743,11 @@ namespace Wspr_Map
 
                         if (locator == "")
                         {
-                            locator = (string)Reader["reporter_loc"];
+                            locator = (string)Reader["tx_loc"];
                         }
                         if (call == "")
                         {
-                            call = (string)Reader["reporter"];
+                            call = (string)Reader["tx_sign"];
                         }
 
                         if (locator != "" && call != "")
