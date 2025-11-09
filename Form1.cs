@@ -93,7 +93,7 @@ namespace Wspr_Map
         private async void Form1_Load(object sender, EventArgs e)
         {
             System.Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            string ver = "0.1.1";
+            string ver = "0.1.2";
             string header = "WSPR Scheduler Map                       V." + ver + "    GNU GPLv3 License";
             passtextBox.Text = pass;
             radioButton1.Checked = true;
