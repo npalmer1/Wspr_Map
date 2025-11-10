@@ -147,6 +147,8 @@
             // pathcheckBox
             // 
             pathcheckBox.AutoSize = true;
+            pathcheckBox.Checked = true;
+            pathcheckBox.CheckState = CheckState.Checked;
             pathcheckBox.Font = new Font("Segoe UI", 8.25F);
             pathcheckBox.Location = new Point(1081, 203);
             pathcheckBox.Name = "pathcheckBox";

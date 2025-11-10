@@ -17,9 +17,10 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using WSPR_Map;
 using static GMap.NET.Entity.OpenStreetMapRouteEntity;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
-using WSPR_Map;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 
 namespace Wspr_Map
@@ -95,11 +96,14 @@ namespace Wspr_Map
             System.Version version = Assembly.GetExecutingAssembly().GetName().Version;
             string ver = "0.1.2";
             string header = "WSPR Scheduler Map                       V." + ver + "    GNU GPLv3 License";
+            MessageForm mForm = new MessageForm();
+            Msg.TCMessageBox("Initialising WSPR Scheduler Map", "WS Map", 20000, mForm);
             passtextBox.Text = pass;
             radioButton1.Checked = true;
             bandlistBox.SelectedIndex = 0; //all bands
-            periodlistBox.SelectedIndex = 0; //last 10 minutes
+            periodlistBox.SelectedIndex = 3; //last 10 minutes
             clutterlistBox.SelectedIndex = 0; //default to 0
+            pathcheckBox.Checked = true;    //seelct path lines by default
 
             gmap.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
             //gmap.MapProvider = GMap.NET.MapProviders.BingMapProvider.Instance;
@@ -122,14 +126,14 @@ namespace Wspr_Map
             int i = table_countRX();
             if (i > 0)
             {
-                await find_reportedRX(i);
+                await find_reportedRX(i);    //find own call and locator from database
             }
             else
             {
                 MessageBox.Show("Database error or no data in database");
             }
 
-            addOwn();
+            addOwn();   //add own marker to map
             gmap.Overlays.Add(markers);
 
             gmap.Zoom = 2;
@@ -146,7 +150,8 @@ namespace Wspr_Map
             if (!getUserandPassword())
             {
                 passtextBox.Text = "";
-            }
+            }            
+            mForm.Dispose();
 
             //GMaps.Instance.Mode = AccessMode.CacheOnly;
         }
@@ -158,6 +163,7 @@ namespace Wspr_Map
                 pin);
             marker.Tag = tag;
             markers.Markers.Add(marker);
+          
 
         }
 
@@ -203,7 +209,7 @@ namespace Wspr_Map
         private int table_countRX()
         {
             int count;
-            string connectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rx";
+            string connectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rpt";
 
             try
             {
@@ -212,7 +218,7 @@ namespace Wspr_Map
                 using (var connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
-                    using (var command = new MySqlCommand("SELECT COUNT(*) FROM reported", connection))
+                    using (var command = new MySqlCommand("SELECT COUNT(*) FROM received", connection))
                     {
                         count = Convert.ToInt32(command.ExecuteScalar());
                     }
@@ -493,6 +499,33 @@ namespace Wspr_Map
             
             mForm.Dispose();
         }
+
+        private async void initial_map(int min)
+        {
+            DateTime end = DateTime.Now.ToUniversalTime();
+            DateTime start = DateTime.Now.AddMinutes(-min);
+            string to = end.ToString("yyyy-MM-dd HH:mm:00");
+            string from = start.ToString("yyyy-MM-dd HH:mm:00");
+            int rows = table_countRX();
+            if (rows > 0)
+            {
+                if (radioButton1.Checked || radioButton3.Checked)
+                {
+                    await find_selectedRX(from, to, "", rows);
+                }
+
+            }
+            rows = table_countTX();
+            if (rows > 0)
+            {
+
+                if (radioButton1.Checked || radioButton2.Checked)
+                {
+                    await find_selectedTX(from, to, -2, rows); //-2 means all bands
+                }
+
+            }
+        }
         private async void filter_results()
         {
             double zoom = gmap.Zoom;
@@ -533,6 +566,7 @@ namespace Wspr_Map
             string mhz = find_band();
             int band = get_band(bandlistBox.SelectedIndex);
             addOwn();
+            
             if (rows > 0)
             {
                 if (radioButton1.Checked || radioButton3.Checked)
@@ -563,7 +597,8 @@ namespace Wspr_Map
 
 
         private async Task find_selectedRX(string datetime1, string datetime2, string mhz, int tablecount) //find a slot row for display in grid from the database corresponding to the date/time from the slot
-        {
+        {   //received by own station of other station txns
+
             //gmap.Zoom = 3;
             double txlat = 0;
             double txlon = 0;
@@ -572,7 +607,7 @@ namespace Wspr_Map
             //DateTime d = new DateTime();
             int i = 0;
             bool found = false;
-            string myConnectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rx";
+            string myConnectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rpt";
 
             int maxrows = 1000; //max rows to return
             string and = "";
@@ -607,7 +642,7 @@ namespace Wspr_Map
 
 
 
-                command.CommandText = "SELECT * FROM reported WHERE time >= '" + datetime1 + "' AND time <= '" + datetime2 + "'" + bandstr + " AND distance >= '" + fromstr + "' ORDER BY time DESC";
+                command.CommandText = "SELECT * FROM received WHERE datetime >= '" + datetime1 + "' AND datetime <= '" + datetime2 + "'" + bandstr + " AND distance >= '" + fromstr + "' ORDER BY datetime DESC";
 
 
                 MySqlDataReader Reader;
@@ -621,7 +656,7 @@ namespace Wspr_Map
                     if (i < tablecount)   //only show first maxrows rows, or to length of reported table
                     {
 
-                        DX.datetime = (DateTime)Reader["time"];
+                        DX.datetime = (DateTime)Reader["datetime"];
                         DX.band = (Int16)Reader["band"];
 
                         DX.tx_sign = (string)Reader["tx_sign"];
@@ -714,12 +749,13 @@ namespace Wspr_Map
 
 
         private async Task<bool> find_reportedRX(int tablecount) //find a slot row for display in grid from the database corresponding to the date/time from the slot
-        {
+        {   //find own call and locator from database
+
             DataTable Slots = new DataTable();
             //DateTime d = new DateTime();
             int i = 0;
             bool found = false;
-            string myConnectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rx";
+            string myConnectionString = "server=" + server + ";user id=" + user + ";password=" + pass + ";database=wspr_rpt";
 
 
             try
@@ -731,7 +767,7 @@ namespace Wspr_Map
                 MySqlCommand command = connection.CreateCommand();
 
 
-                command.CommandText = "SELECT tx_sign, tx_loc FROM reported ORDER BY time DESC";
+                command.CommandText = "SELECT reporter, reporter_loc FROM received ORDER BY datetime DESC";
                 MySqlDataReader Reader;
                 Reader = command.ExecuteReader();
 
@@ -743,11 +779,11 @@ namespace Wspr_Map
 
                         if (locator == "")
                         {
-                            locator = (string)Reader["tx_loc"];
+                            locator = (string)Reader["reporter_loc"];
                         }
                         if (call == "")
                         {
-                            call = (string)Reader["tx_sign"];
+                            call = (string)Reader["reporter"];
                         }
 
                         if (locator != "" && call != "")
@@ -778,7 +814,7 @@ namespace Wspr_Map
 
 
         private async Task find_selectedTX(string time1, string time2, int band, int tablecount) //find a slot row for display in grid from the database corresponding to the date/time from the slot
-        {
+        { //reports from other stations about own txns
             //gmap.Zoom = 3;
             double rxlat = 0;
             double rxlon = 0;
@@ -1096,7 +1132,7 @@ namespace Wspr_Map
         {
             if (autocheckBox.Checked)
             {
-                periodlistBox.SelectedIndex = 1;  //20 mins default
+                periodlistBox.SelectedIndex = 3;  //60 mins default
                 //bandlistBox.SelectedIndex = 0;
                 //clutterlistBox.SelectedIndex = 1;
                 pathcheckBox.Checked = true;
