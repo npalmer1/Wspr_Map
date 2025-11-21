@@ -91,6 +91,7 @@ namespace Wspr_Map
         string pass = "wspr";
 
         bool connectionError = false;
+
         private async void Form1_Load(object sender, EventArgs e)
         {
             System.Version version = Assembly.GetExecutingAssembly().GetName().Version;
