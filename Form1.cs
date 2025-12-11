@@ -95,14 +95,14 @@ namespace Wspr_Map
         private async void Form1_Load(object sender, EventArgs e)
         {
             System.Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            string ver = "0.1.2";
+            string ver = "0.1.3";
             string header = "WSPR Scheduler Map                       V." + ver + "    GNU GPLv3 License";
-            MessageForm mForm = new MessageForm();
-            Msg.TCMessageBox("Initialising WSPR Scheduler Map", "WS Map", 20000, mForm);
+            //MessageForm mForm = new MessageForm();
+            Msg.TMessageBox("Initialising WSPR Scheduler Map", "WS Map", 40000);
             passtextBox.Text = pass;
             radioButton1.Checked = true;
             bandlistBox.SelectedIndex = 0; //all bands
-            periodlistBox.SelectedIndex = 3; //last 10 minutes
+            periodlistBox.SelectedIndex = 4; //last 120 minutes
             clutterlistBox.SelectedIndex = 0; //default to 0
             pathcheckBox.Checked = true;    //seelct path lines by default
 
@@ -151,8 +151,12 @@ namespace Wspr_Map
             if (!getUserandPassword())
             {
                 passtextBox.Text = "";
-            }            
-            mForm.Dispose();
+            }
+            
+            filter_results();
+            
+           
+            //mForm.Dispose();
 
             //GMaps.Instance.Mode = AccessMode.CacheOnly;
         }
@@ -486,6 +490,10 @@ namespace Wspr_Map
                     return 24;
                 case 9:
                     return 48;
+                case 10:
+                    return 96;
+                case 11:
+                    return 168;
                 default:
                     return 0;
             }
@@ -494,11 +502,16 @@ namespace Wspr_Map
 
         private void filterbutton_Click(object sender, EventArgs e)
         {
-            MessageForm mForm = new MessageForm();
-            Msg.TCMessageBox("Please wait....", "", 30000, mForm);
+            int delay = 30000;
+            //MessageForm mForm = new MessageForm();
+            if (periodlistBox.SelectedIndex > 9)
+            {
+                delay = 50000;
+            }
+            Msg.TMessageBox("Please wait....", "", delay);
             filter_results();
             
-            mForm.Dispose();
+            //mForm.Dispose();
         }
 
         private async void initial_map(int min)
@@ -527,6 +540,7 @@ namespace Wspr_Map
 
             }
         }
+        
         private async void filter_results()
         {
             double zoom = gmap.Zoom;
@@ -556,6 +570,14 @@ namespace Wspr_Map
             else if (p == 48)
             {
                 dtPrev = dtPrev.AddDays(-2);
+            }
+            else if (p == 96)
+            {
+                dtPrev = dtPrev.AddDays(-4);
+            }
+            else if (p == 168)
+            {
+                dtPrev = dtPrev.AddDays(-7);
             }
             else
             {
@@ -1133,7 +1155,7 @@ namespace Wspr_Map
         {
             if (autocheckBox.Checked)
             {
-                periodlistBox.SelectedIndex = 3;  //60 mins default
+                periodlistBox.SelectedIndex = 4;  //120 mins default
                 //bandlistBox.SelectedIndex = 0;
                 //clutterlistBox.SelectedIndex = 1;
                 pathcheckBox.Checked = true;
