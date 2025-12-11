@@ -98,7 +98,7 @@ namespace Wspr_Map
             string ver = "0.1.3";
             string header = "WSPR Scheduler Map                       V." + ver + "    GNU GPLv3 License";
             //MessageForm mForm = new MessageForm();
-            Msg.TMessageBox("Initialising WSPR Scheduler Map", "WS Map", 40000);
+            Msg.TMessageBox("Initialising WSPR Scheduler Map", "WS Map", 25000);
             passtextBox.Text = pass;
             radioButton1.Checked = true;
             bandlistBox.SelectedIndex = 0; //all bands
