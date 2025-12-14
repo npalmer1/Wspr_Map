@@ -95,10 +95,10 @@ namespace Wspr_Map
         private async void Form1_Load(object sender, EventArgs e)
         {
             System.Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            string ver = "0.1.3";
+            string ver = "0.1.4";
             string header = "WSPR Scheduler Map                       V." + ver + "    GNU GPLv3 License";
             //MessageForm mForm = new MessageForm();
-            Msg.TMessageBox("Initialising WSPR Scheduler Map", "WS Map", 25000);
+            Msg.TMessageBox("Iniialising WSPR Scheduler Map", "WS Map", 25000);
             passtextBox.Text = pass;
             radioButton1.Checked = true;
             bandlistBox.SelectedIndex = 0; //all bands
@@ -462,7 +462,7 @@ namespace Wspr_Map
             return b;
         }
 
-        private double findPeriod()
+        private double findPeriod() //find number of minutes/hours/days from selection
         {
             int s = periodlistBox.SelectedIndex;
             string t = "";
@@ -494,6 +494,10 @@ namespace Wspr_Map
                     return 96;
                 case 11:
                     return 168;
+                case 12:
+                    return 240;
+                case 13:
+                    return 336;
                 default:
                     return 0;
             }
