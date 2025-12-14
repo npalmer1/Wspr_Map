@@ -498,6 +498,10 @@ namespace Wspr_Map
                     return 240;
                 case 13:
                     return 336;
+                case 14:
+                    return 504;
+                case 15:
+                    return 672;
                 default:
                     return 0;
             }
@@ -583,6 +587,22 @@ namespace Wspr_Map
             {
                 dtPrev = dtPrev.AddDays(-7);
             }
+            else if (p == 240)
+            {
+                dtPrev = dtPrev.AddDays(-10);
+            }
+            else if (p == 336)
+            {
+                dtPrev = dtPrev.AddDays(-14);
+            }
+            else if (p ==504 )  //3 weeks
+            {
+                dtPrev = dtPrev.AddDays(-21);
+            }
+            else if (p == 672) //28 days
+            {
+                dtPrev = dtPrev.AddDays(-28);
+            }           
             else
             {
                 dtPrev = dtNow;
