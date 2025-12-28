@@ -684,6 +684,7 @@ namespace Wspr_Map
                 and = "AND";
             }
 
+
             string fromstr = "";
             if (clutterlistBox.SelectedIndex >= 0)
             {
