@@ -298,33 +298,39 @@ namespace Wspr_Map
                     b = "10";
                     break;
                 case 8:
-                    b = "14";
+                    b = "13";
                     break;
                 case 9:
-                    b = "18";
+                    b = "14";
                     break;
                 case 10:
-                    b = "21";
+                    b = "18";
                     break;
                 case 11:
-                    b = "24";
+                    b = "21";
                     break;
                 case 12:
-                    b = "28";
+                    b = "24";
                     break;
                 case 13:
-                    b = "50";
+                    b = "28";
                     break;
                 case 14:
-                    b = "70";
+                    b = "40";
                     break;
                 case 15:
-                    b = "144";
+                    b = "50";
                     break;
                 case 16:
-                    b = "432";
+                    b = "70";
                     break;
                 case 17:
+                    b = "144";
+                    break;
+                case 18:
+                    b = "432";
+                    break;
+                case 19:
                     b = "1296";
                     break;
                 default:
@@ -364,33 +370,39 @@ namespace Wspr_Map
                     b = 10;
                     break;
                 case 8:
-                    b = 14;
+                    b = 13;
                     break;
                 case 9:
-                    b = 18;
+                    b = 14;
                     break;
                 case 10:
-                    b = 21;
+                    b = 18;
                     break;
                 case 11:
-                    b = 24;
+                    b = 21;
                     break;
                 case 12:
-                    b = 28;
+                    b = 24;
                     break;
                 case 13:
-                    b = 50;
+                    b = 28;
                     break;
                 case 14:
-                    b = 70;
+                    b = 40;
                     break;
                 case 15:
-                    b = 144;
+                    b = 50;
                     break;
                 case 16:
-                    b = 432;
+                    b = 70;
                     break;
                 case 17:
+                    b = 144;
+                    break;
+                case 18:
+                    b = 432;
+                    break;
+                case 19:
                     b = 1296;
                     break;
                 default:
@@ -425,6 +437,9 @@ namespace Wspr_Map
                 case 10:
                     b = "30";
                     break;
+                case 13:
+                    b = "22";
+                    break;
                 case 14:
                     b = "20";
                     break;
@@ -439,6 +454,9 @@ namespace Wspr_Map
                     break;
                 case 28:
                     b = "10";
+                    break;
+                case 40:
+                    b = "8";
                     break;
                 case 50:
                     b = "6";
