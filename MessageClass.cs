@@ -17,6 +17,7 @@ namespace WSPR_Map
                 runTCMessageBox(text, caption, delay, mForm);
           
         }
+
         public async Task runTCMessageBox(string text, string caption, int delay, MessageForm mForm)
         {
             //maximum text length 55           
