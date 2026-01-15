@@ -80,7 +80,7 @@
             periodlistBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             periodlistBox.FormattingEnabled = true;
             periodlistBox.Items.AddRange(new object[] { "10 mins", "20 mins", "30 mins", "1 hour", "2 hours", "3 hours", "6 hours", "12 hours", "24 hours", "2 days", "4 days", "7 days", "10 days", "14 days", "21 days", "28 days" });
-            periodlistBox.Location = new Point(1012, 50);
+            periodlistBox.Location = new Point(1040, 52);
             periodlistBox.Name = "periodlistBox";
             periodlistBox.Size = new Size(60, 212);
             periodlistBox.TabIndex = 2;
@@ -90,7 +90,7 @@
             bandlistBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             bandlistBox.FormattingEnabled = true;
             bandlistBox.Items.AddRange(new object[] { "All", "LF", "MF", "160m", "80m", "60m", "40m", "30m", "22m", "20m", "17m", "15m", "12m", "10m", "8m", "6m", "4m", "2m", "70cm", "23cm" });
-            bandlistBox.Location = new Point(1084, 50);
+            bandlistBox.Location = new Point(1112, 52);
             bandlistBox.Name = "bandlistBox";
             bandlistBox.Size = new Size(53, 264);
             bandlistBox.TabIndex = 3;
@@ -99,7 +99,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.Location = new Point(1011, 34);
+            label2.Location = new Point(1039, 36);
             label2.Name = "label2";
             label2.Size = new Size(40, 13);
             label2.TabIndex = 4;
@@ -109,7 +109,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label3.Location = new Point(1084, 34);
+            label3.Location = new Point(1112, 36);
             label3.Name = "label3";
             label3.Size = new Size(33, 13);
             label3.TabIndex = 5;
@@ -118,7 +118,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(1067, 472);
+            label4.Location = new Point(1091, 474);
             label4.Name = "label4";
             label4.Size = new Size(75, 45);
             label4.TabIndex = 6;
@@ -126,7 +126,7 @@
             // 
             // filterbutton
             // 
-            filterbutton.Location = new Point(1048, 8);
+            filterbutton.Location = new Point(1076, 10);
             filterbutton.Name = "filterbutton";
             filterbutton.Size = new Size(52, 23);
             filterbutton.TabIndex = 7;
@@ -137,7 +137,7 @@
             // configbutton
             // 
             configbutton.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            configbutton.Location = new Point(1020, 633);
+            configbutton.Location = new Point(1048, 634);
             configbutton.Name = "configbutton";
             configbutton.Size = new Size(58, 23);
             configbutton.TabIndex = 8;
@@ -151,7 +151,7 @@
             pathcheckBox.Checked = true;
             pathcheckBox.CheckState = CheckState.Checked;
             pathcheckBox.Font = new Font("Segoe UI", 8.25F);
-            pathcheckBox.Location = new Point(1015, 270);
+            pathcheckBox.Location = new Point(1043, 272);
             pathcheckBox.Name = "pathcheckBox";
             pathcheckBox.Size = new Size(55, 17);
             pathcheckBox.TabIndex = 9;
@@ -163,7 +163,7 @@
             // 
             radioButton1.AutoSize = true;
             radioButton1.Font = new Font("Segoe UI", 8.25F);
-            radioButton1.Location = new Point(1015, 292);
+            radioButton1.Location = new Point(1043, 294);
             radioButton1.Name = "radioButton1";
             radioButton1.Size = new Size(64, 17);
             radioButton1.TabIndex = 10;
@@ -175,7 +175,7 @@
             // 
             radioButton2.AutoSize = true;
             radioButton2.Font = new Font("Segoe UI", 8.25F);
-            radioButton2.Location = new Point(1015, 311);
+            radioButton2.Location = new Point(1043, 313);
             radioButton2.Name = "radioButton2";
             radioButton2.Size = new Size(62, 17);
             radioButton2.TabIndex = 11;
@@ -187,7 +187,7 @@
             // 
             radioButton3.AutoSize = true;
             radioButton3.Font = new Font("Segoe UI", 8.25F);
-            radioButton3.Location = new Point(1015, 330);
+            radioButton3.Location = new Point(1043, 332);
             radioButton3.Name = "radioButton3";
             radioButton3.Size = new Size(63, 17);
             radioButton3.TabIndex = 12;
@@ -199,7 +199,7 @@
             // 
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label8.Location = new Point(1003, 356);
+            label8.Location = new Point(1031, 358);
             label8.Name = "label8";
             label8.Size = new Size(58, 13);
             label8.TabIndex = 14;
@@ -210,7 +210,7 @@
             clutterlistBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             clutterlistBox.FormattingEnabled = true;
             clutterlistBox.Items.AddRange(new object[] { "0", "50", "100", "200", "400", "600", "800", "1000", "1200", "1500", "1800" });
-            clutterlistBox.Location = new Point(1008, 374);
+            clutterlistBox.Location = new Point(1036, 376);
             clutterlistBox.Name = "clutterlistBox";
             clutterlistBox.Size = new Size(49, 147);
             clutterlistBox.TabIndex = 15;
@@ -219,7 +219,7 @@
             // 
             mlslabel.AutoSize = true;
             mlslabel.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            mlslabel.Location = new Point(1061, 376);
+            mlslabel.Location = new Point(1089, 378);
             mlslabel.Name = "mlslabel";
             mlslabel.Size = new Size(24, 13);
             mlslabel.TabIndex = 16;
@@ -229,7 +229,7 @@
             // 
             kmcheckBox.AutoSize = true;
             kmcheckBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            kmcheckBox.Location = new Point(1063, 418);
+            kmcheckBox.Location = new Point(1091, 420);
             kmcheckBox.Name = "kmcheckBox";
             kmcheckBox.Size = new Size(62, 17);
             kmcheckBox.TabIndex = 17;
@@ -241,7 +241,7 @@
             // 
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label9.Location = new Point(1011, 563);
+            label9.Location = new Point(1039, 564);
             label9.Name = "label9";
             label9.Size = new Size(42, 13);
             label9.TabIndex = 18;
@@ -251,7 +251,7 @@
             // 
             Zoomlabel.AutoSize = true;
             Zoomlabel.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Zoomlabel.Location = new Point(1056, 563);
+            Zoomlabel.Location = new Point(1084, 564);
             Zoomlabel.Name = "Zoomlabel";
             Zoomlabel.Size = new Size(44, 13);
             Zoomlabel.TabIndex = 19;
@@ -260,7 +260,7 @@
             // recentrebutton
             // 
             recentrebutton.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            recentrebutton.Location = new Point(1018, 583);
+            recentrebutton.Location = new Point(1046, 584);
             recentrebutton.Name = "recentrebutton";
             recentrebutton.Size = new Size(61, 22);
             recentrebutton.TabIndex = 20;
@@ -272,7 +272,7 @@
             // 
             autocheckBox.AutoSize = true;
             autocheckBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            autocheckBox.Location = new Point(1021, 610);
+            autocheckBox.Location = new Point(1049, 611);
             autocheckBox.Name = "autocheckBox";
             autocheckBox.Size = new Size(79, 17);
             autocheckBox.TabIndex = 21;
@@ -385,7 +385,7 @@
             gmap.GrayScaleMode = false;
             gmap.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
             gmap.LevelsKeepInMemory = 5;
-            gmap.Location = new Point(-28, -28);
+            gmap.Location = new Point(-1, -15);
             gmap.MarkersEnabled = true;
             gmap.MaxZoom = 2;
             gmap.MinZoom = 2;
@@ -399,7 +399,7 @@
             gmap.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Fractional;
             gmap.SelectedAreaFillColor = Color.FromArgb(33, 65, 105, 225);
             gmap.ShowTileGridLines = false;
-            gmap.Size = new Size(1008, 740);
+            gmap.Size = new Size(1007, 729);
             gmap.TabIndex = 2;
             gmap.Zoom = 0D;
             gmap.OnMarkerClick += gmap_OnMarkerClick;
@@ -432,7 +432,7 @@
             // 
             QcheckBox.AutoSize = true;
             QcheckBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            QcheckBox.Location = new Point(1003, 527);
+            QcheckBox.Location = new Point(1031, 528);
             QcheckBox.Name = "QcheckBox";
             QcheckBox.Size = new Size(127, 30);
             QcheckBox.TabIndex = 23;
@@ -444,7 +444,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ClientSize = new Size(1161, 726);
+            ClientSize = new Size(1174, 726);
             Controls.Add(gmap);
             Controls.Add(QcheckBox);
             Controls.Add(groupBox1);
