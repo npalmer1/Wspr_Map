@@ -399,7 +399,7 @@
             gmap.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Fractional;
             gmap.SelectedAreaFillColor = Color.FromArgb(33, 65, 105, 225);
             gmap.ShowTileGridLines = false;
-            gmap.Size = new Size(1007, 729);
+            gmap.Size = new Size(1021, 754);
             gmap.TabIndex = 2;
             gmap.Zoom = 0D;
             gmap.OnMarkerClick += gmap_OnMarkerClick;
@@ -444,7 +444,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ClientSize = new Size(1174, 726);
+            ClientSize = new Size(1179, 757);
             Controls.Add(gmap);
             Controls.Add(QcheckBox);
             Controls.Add(groupBox1);
