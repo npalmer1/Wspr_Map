@@ -29,7 +29,11 @@ namespace Wspr_Map
     {
         public Form1()
         {
+         
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.Sizable;
+            this.MaximizeBox = true;
+            this.MinimizeBox = true;
         }
 
         GMapOverlay markers = new GMapOverlay("markers");
@@ -94,8 +98,12 @@ namespace Wspr_Map
 
         private async void Form1_Load(object sender, EventArgs e)
         {
+
+            this.FormBorderStyle = FormBorderStyle.Sizable;
+            this.MaximizeBox = true;
+            this.MinimizeBox = true;
             System.Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            string ver = "0.1.6";
+            string ver = "0.1.7";
             string header = "WSPR Scheduler Map                       V." + ver + "    GNU GPLv3 License";
             //MessageForm mForm = new MessageForm();
             Msg.TMessageBox("Initialising WSPR Scheduler Map", "WS Map", 25000);
@@ -137,7 +145,7 @@ namespace Wspr_Map
             addOwn();   //add own marker to map
             gmap.Overlays.Add(markers);
 
-            gmap.Zoom = 2;
+            gmap.Zoom = 2.0;
             gmap.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             Zoomlabel.Text = gmap.Zoom.ToString("F1");
@@ -154,11 +162,12 @@ namespace Wspr_Map
             }
             
             filter_results();
-            
-           
+
+
             //mForm.Dispose();
 
             //GMaps.Instance.Mode = AccessMode.CacheOnly;
+           
         }
         private async Task addMarker(double lat, double lon, GMarkerGoogleType pin, string tag)
         {
