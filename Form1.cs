@@ -1009,7 +1009,7 @@ namespace Wspr_Map
 
             locatortextBox.Text = locator;
             calltextBox.Text = call;
-
+            groupBox1.BringToFront();
             groupBox1.Visible = true;
 
         }
